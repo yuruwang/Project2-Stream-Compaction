@@ -26,6 +26,7 @@ Part 5 (Optimize GPU work efficient scan) was implemented. The optimized efficie
 ![](img/blockSize.jpg)
 As shown in above diagram, the block size does not affect the performance much, so a decent block size of 512 was chosen for comparing performance of various implementations.
 
+
 ![](img/scan_comparison.jpg)
 The above plot demonstrates a rough ranking among various versions of implementations: Thrust has best performance, and GPU work efficient scan algorithm comes next. The GPU naive scan algorithm ranks the third place, and the CPU scan performs worst.
 
@@ -33,8 +34,10 @@ When the array size is small (less than 2^20), there is no big performance diffe
 
 Thrust implementation works very well even for large array size, I guess that is because thrust implementation uses shared memory, which results in faster memory access compare to global memory.
 
+
 ![](img/compact.jpg)
 From this graph, it is clear that the GPU compact with scan has best performance than other implementations.
+
 
 ![](img/optimization.jpg)
 Above graph shows the performance improvement for the GPU work efficient scan after optimizing. About more than twice scan efficiency improvement can be observed especially for large array size that exceeds 2^26. This is achieved by decreasing hanging threads at up sweep and down sweep phases. The old implementation is slow because some threads are not working at each iteration of sweeping, which wastes the resources of SM. After decreasing removing those threads and compacting all working threads with indices hacks, the computing power of SM is fully used and the performance is thus improved.
